@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RepoLens - AI-Powered Codebase Intelligence</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="brand">
+                    <div class="logo-icon"><i class="fa-solid fa-layer-group"></i></div>
+                    <div class="brand-text">
+                        <span class="brand-name">RepoLens</span>
+                        <span class="brand-tag">CODEBASE INTELLIGENCE</span>
+                    </div>
+                </div>
+                <button class="btn btn-secondary new-repo-btn" id="newRepoBtn">
+                    <i class="fa-solid fa-plus"></i> New Repository
+                </button>
+            </div>
+            
+            <div class="sidebar-content">
+                <div class="sidebar-section">
+                    <div class="section-title">Recent Repositories</div>
+                    <ul class="recent-repo-list" id="recentRepositories">
+                        <li class="empty-repo-state">Analyze a public GitHub repo to build history.</li>
+                    </ul>
+                    <button class="view-all-btn" type="button">
+                        <span>View All Repositories</span>
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </button>
+                </div>
+
+                <div class="sidebar-section quick-stats-card">
+                    <div class="section-title">Quick Stats</div>
+                    <div class="quick-stat-row">
+                        <span><i class="fa-regular fa-folder-open"></i> Repositories Indexed</span>
+                        <strong id="sidebarRepoCount">0</strong>
+                    </div>
+                    <div class="quick-stat-row">
+                        <span><i class="fa-regular fa-circle-question"></i> Questions Asked</span>
+                        <strong id="sidebarQuestionCount">0</strong>
+                    </div>
+                    <div class="quick-stat-row">
+                        <span><i class="fa-regular fa-file-lines"></i> Files Indexed</span>
+                        <strong id="sidebarFilesIndexed">--</strong>
+                    </div>
+                    <div class="quick-stat-row">
+                        <span><i class="fa-regular fa-gem"></i> Chunks Created</span>
+                        <strong id="sidebarChunksCreated">--</strong>
+                    </div>
+                    <div class="quick-stat-row">
+                        <span><i class="fa-solid fa-globe"></i> Embeddings</span>
+                        <strong id="sidebarEmbeddings">--</strong>
+                    </div>
+                </div>
+
+                <div class="sidebar-pill">
+                    <span class="dot"></span>
+                    Gemini 3.5 Flash
+                </div>
+
+                <div id="activeRepoDetails" class="active-repo-details" style="display: none;">
+                    <div class="section-title">CURRENT REPOSITORY</div>
+
+                    <div class="repo-details-card">
+                        <div class="repo-details-header">
+                            <i class="fa-brands fa-github"></i>
+                            <span class="repo-name-large" id="sidebarRepoName">owner/repo</span>
+                        </div>
+
+                        <div class="status-badge success">
+                            <span class="dot"></span> Indexed
+                        </div>
+
+                        <p id="repoDescription" class="repo-description">
+                            Repository description will appear here.
+                        </p>
+
+                        <div class="repo-stats-list">
+                            <div class="stat-row">
+                                <span class="stat-label"><i class="fa-solid fa-star"></i> Stars</span>
+                                <span class="stat-value" id="repoStars">0</span>
+                            </div>
+
+                            <div class="stat-row">
+                                <span class="stat-label"><i class="fa-solid fa-code-fork"></i> Forks</span>
+                                <span class="stat-value" id="repoForks">0</span>
+                            </div>
+
+                            <div class="stat-row">
+                                <span class="stat-label"><i class="fa-solid fa-code-branch"></i> Branch</span>
+                                <span class="stat-value" id="defaultBranch">main</span>
+                            </div>
+
+                            <div class="stat-row">
+                                <span class="stat-label"><i class="fa-solid fa-file-code"></i> Files</span>
+                                <span class="stat-value" id="totalFiles">0</span>
+                            </div>
+
+                            <div class="stat-row">
+                                <span class="stat-label"><i class="fa-solid fa-folder-tree"></i> Useful Files</span>
+                                <span class="stat-value" id="usefulFiles">0</span>
+                            </div>
+
+                            <div class="stat-row">
+                                <span class="stat-label"><i class="fa-solid fa-code"></i> Language</span>
+                                <span class="stat-value" id="repoLanguage">Unknown</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-title" id="recentTitle" style="margin-top: 1.5rem; display: none;">RECENT CHATS</div>
+                <ul class="repo-list" id="recentChats" style="display: none;">
+                    <li class="repo-item">
+                        <i class="fa-regular fa-message"></i>
+                        <div class="repo-info">
+                            <span class="repo-name">Auth flow in project</span>
+                        </div>
+                    </li>
+                    <li class="repo-item">
+                        <i class="fa-regular fa-message"></i>
+                        <div class="repo-info">
+                            <span class="repo-name">Database connection setup</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Background Grid -->
+            <div class="bg-grid"></div>
+            <div class="ambient-glow glow-one"></div>
+            <div class="ambient-glow glow-two"></div>
+
+            <div class="top-actions">
+                <button class="icon-action" type="button" aria-label="Toggle theme">
+                    <i class="fa-regular fa-sun"></i>
+                </button>
+                <a class="icon-action" href="https://github.com/" target="_blank" rel="noopener noreferrer" aria-label="Open GitHub">
+                    <i class="fa-brands fa-github"></i>
+                </a>
+            </div>
+
+            <!-- Landing View -->
+            <section class="view-container active" id="landingView">
+                <div class="landing-shell">
+                    <div class="hero">
+                        <div class="badge">
+                            <span class="dot"></span> Repolens AI
+                        </div>
+                        <h1>Understand any codebase<br><span>with AI.</span></h1>
+                        <p class="subtitle">Paste a public GitHub repository. RepoLens indexes the source, retrieves the relevant code for your question, and gives you answers backed by real files.</p>
+
+                        <div class="search-container">
+                            <div class="search-box">
+                                <i class="fa-brands fa-github search-icon"></i>
+                                <input type="text" id="repoUrlInput" placeholder="https://github.com/owner/repo" autocomplete="off">
+                                <button class="btn btn-primary" id="analyzeBtn">Analyze <i class="fa-solid fa-arrow-right"></i></button>
+                            </div>
+                            <div class="search-suggestions">
+                                <span>try:</span>
+                                <button class="suggestion-tag" type="button">tiangolo/fastapi</button>
+                                <button class="suggestion-tag" type="button">expressjs/express</button>
+                                <button class="suggestion-tag" type="button">pallets/flask</button>
+                                <button class="suggestion-tag" type="button">django/django</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="metrics-panel">
+                        <div class="metric-item">
+                            <div class="metric-icon blue"><i class="fa-regular fa-file-code"></i></div>
+                            <div>
+                                <strong id="landingFilesIndexed">--</strong>
+                                <span>Files Indexed</span>
+                            </div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-icon green"><i class="fa-solid fa-cube"></i></div>
+                            <div>
+                                <strong id="landingChunksCreated">--</strong>
+                                <span>Chunks Created</span>
+                            </div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-icon cyan"><i class="fa-solid fa-link"></i></div>
+                            <div>
+                                <strong id="landingEmbeddings">--</strong>
+                                <span>Embeddings</span>
+                            </div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-icon yellow"><i class="fa-solid fa-magnifying-glass"></i></div>
+                            <div>
+                                <strong id="landingTopK">5</strong>
+                                <span>Retrieved (Top K)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="last-repo-card" id="lastRepoCard">
+                        <div class="last-repo-main">
+                            <span class="eyebrow">Last Analyzed Repository</span>
+                            <div class="last-repo-details">
+                                <div class="language-badge" id="lastRepoLanguageIcon"><i class="fa-brands fa-github"></i></div>
+                                <div>
+                                    <strong id="lastRepoName">No repository analyzed yet</strong>
+                                    <span id="lastRepoMeta">Run an analysis to fill this from the backend.</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="outline-action" type="button" id="askAnythingBtn">
+                            Ask Anything <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+
+                    <div class="features-grid">
+                        <div class="feature-card">
+                            <div class="feature-icon purple">
+                                <i class="fa-solid fa-file-import"></i>
+                            </div>
+                            <h3>Index source files</h3>
+                            <p>We fetch the default branch, walk every code file, and slice it into semantic chunks.</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon slate">
+                                <i class="fa-solid fa-magnifying-glass-chart"></i>
+                            </div>
+                            <h3>Retrieve relevant code</h3>
+                            <p>Your question is matched against every chunk to surface the most relevant slices.</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon gold">
+                                <i class="fa-regular fa-message"></i>
+                            </div>
+                            <h3>Answer with sources</h3>
+                            <p>RepoLens explains the code and cites the exact files used, so you can verify every claim.</p>
+                        </div>
+                    </div>
+
+                    <div class="popular-questions">
+                        <div class="popular-title">
+                            <i class="fa-regular fa-lightbulb"></i>
+                            <span>Popular Questions</span>
+                        </div>
+                        <div class="popular-scroll">
+                            <button class="popular-chip" type="button">Explain the project architecture</button>
+                            <button class="popular-chip" type="button">Where is authentication implemented?</button>
+                            <button class="popular-chip" type="button">How are routes created?</button>
+                            <button class="popular-chip" type="button">Explain the database models</button>
+                            <button class="popular-chip" type="button">How does the request cycle work?</button>
+                            <button class="popular-next" type="button" aria-label="More popular questions">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Loading View -->
+            <section class="view-container" id="loadingView">
+                <div class="loading-state">
+                    <div class="spinner"></div>
+                    <h2>Analyzing Repository...</h2>
+                    <p class="loading-text">Fetching files and generating embeddings</p>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" id="analysisProgress"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Chat View -->
+            <section class="view-container" id="chatView">
+                <header class="chat-header">
+                    <div class="repo-title">
+                        <i class="fa-brands fa-github" style="color: var(--text-muted)"></i>
+                        <h2 id="currentRepoNameHeader">tiangolo/fastapi</h2>
+                    </div>
+                </header>
+
+                <div class="chat-scroll-area" id="chatScrollArea">
+                    <div class="chat-history" id="chatHistory">
+                        <!-- Initial Greeting / Suggestions -->
+                        <div class="welcome-section" id="welcomeSection">
+                            <div class="logo-icon large"><i class="fa-solid fa-layer-group"></i></div>
+                            <h3>Ask anything about this codebase</h3>
+                            <p>Here are a few questions you can try to get started:</p>
+                            
+                            <div class="question-suggestions">
+                                <button class="q-suggestion">Explain the overall architecture</button>
+                                <button class="q-suggestion">How does authentication work?</button>
+                                <button class="q-suggestion">Where is the database connection configured?</button>
+                                <button class="q-suggestion">Which file handles user routing?</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chat-input-wrapper">
+                    <div class="chat-input-container">
+                        <textarea id="chatInput" placeholder="Ask a question about the repository..." rows="1"></textarea>
+                        <button class="btn-icon" id="sendBtn"><i class="fa-solid fa-paper-plane"></i></button>
+                    </div>
+                    <div class="chat-footer">RepoLens AI can make mistakes. Check the source files.</div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="js/app.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+<link rel="stylesheet"href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+</body>
+</html>
